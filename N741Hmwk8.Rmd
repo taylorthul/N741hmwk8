@@ -1,10 +1,10 @@
 ---
 title: "N741 Homework 8"
-author: "Melinda K. Higgins, PhD."
-date: "April 4, 2017"
+author: "Taylor Thul"
+date: "April 1, 2017"
 output:
-  github_document: default
   html_document: default
+  github_document: default
   pdf_document: default
   word_document: default
 ---
@@ -140,6 +140,7 @@ plot(pr.out$rotation[,1],pr.out$rotation[,2],
      ylab = "Principal Component 2",
      main = "Loadings Plot for PC 1 and 2")
 
+
 # add xpd=FALSE to prevent lines drawn outside plot area
 par(xpd=FALSE)
 
@@ -187,16 +188,103 @@ _HINT: simply rename the new subsets and run the code steps above._
 ```{r}
 # redo for benign ==============
 bcdat <- bcdatBenign
-# run steps above
 
+#step 1: perform the PCA
+
+pr.out <- prcomp(bcdat[,2:10], scale=TRUE)
+summary(pr.out)
+
+#step 2: plots of the variance and PVE
+plot(pr.out)
+
+#step 3: make a loading plot of variables
+pr.out$rotation
+
+# choose the 1st and 2nd columns for the 1st 2 PCs
+# and plot these loading weights for the 9
+# variables
+plot(pr.out$rotation[,1],pr.out$rotation[,2],
+     xlim=c(-0.5,0.1),ylim=c(-0.5,1),
+     cex=2, pch=19,
+     xlab = "Principal Component 1",
+     ylab = "Principal Component 2",
+     main = "Loadings Plot for PC 1 and 2 in Benign Class")
+
+# add xpd=FALSE to prevent lines drawn outside plot area
+par(xpd=FALSE)
+
+# add red dashed lines for the axes at y=0 and x=0
+abline(h=0, col="red")
+abline(v=0, col="red")
+
+# overlay the variable names on this loading plot
+text(pr.out$rotation[,1],pr.out$rotation[,2],
+     labels = rownames(pr.out$rotation),
+     pos = 3)
+
+#4: score plot on 1st 2 PCA
+# scores plot - use x from the pr.out list object
+# plot scores on 1st 2 PCs, columns 1 and 2 of x
+plot(pr.out$x[,1],pr.out$x[,2], 
+     col = bcdat$class,
+     xlab = "Principal Component 1",
+     ylab = "Principal Component 2",
+     main = "Scores Plot on PC 1 and 2")
+```
+
+
+```{r}
 # redo for malignant ==================
 bcdat <- bcdatMalignant
-# run steps above
+
+#step 1: perform the PCA
+
+pr.out <- prcomp(bcdat[,2:10], scale=TRUE)
+summary(pr.out)
+
+#step 2: plots of the variance and PVE
+plot(pr.out)
+
+#step 3: make a loading plot of variables
+pr.out$rotation
+
+# choose the 1st and 2nd columns for the 1st 2 PCs
+# and plot these loading weights for the 9
+# variables
+plot(pr.out$rotation[,1],pr.out$rotation[,2],
+     xlim=c(-0.5,0.1),ylim=c(-0.5,1),
+     cex=2, pch=19,
+     xlab = "Principal Component 1",
+     ylab = "Principal Component 2",
+     main = "Loadings Plot for PC 1 and 2 in Malignant Class")
+
+# add xpd=FALSE to prevent lines drawn outside plot area
+par(xpd=FALSE)
+
+# add red dashed lines for the axes at y=0 and x=0
+abline(h=0, col="red")
+abline(v=0, col="red")
+
+# overlay the variable names on this loading plot
+text(pr.out$rotation[,1],pr.out$rotation[,2],
+     labels = rownames(pr.out$rotation),
+     pos = 3)
+
+#4: score plot on 1st 2 PCA
+# scores plot - use x from the pr.out list object
+# plot scores on 1st 2 PCs, columns 1 and 2 of x
+plot(pr.out$x[,1],pr.out$x[,2], 
+     col = bcdat$class,
+     xlab = "Principal Component 1",
+     ylab = "Principal Component 2",
+     main = "Scores Plot on PC 1 and 2")
 ```
 
 2. In the overall dataset, when looking at the loadings plot, which variables cluster together? which variables do not lie with that cluster?
+In the loadings plot for the overall data set, the clear outlier is mitoses.  While all the other variables fall within a general cluster, mitoses is far outside it.  Within the cluster there appear to be two sub-clusters of blandchromatin/ barenucfix and uniformecellsize/ uniformcellshape.  
 
 3. How do the variable clusters seen in the loading plots for the Benign data subset and Malignant subset differ? and how are they similar if at all?
+Within the Benign subset mitoses is still a clear outlier with the remaining variables falling into a rough group (and three smaller groups within that).  However in the Malignant subset the picture is quite different.  There are two outliers (clumpthickness and barenucfix) and a rough grouping of the remaining variables.  The "group" is far more spread out than in the overall and Benign plots.  
 
 4. Is using 2 principal components reasonable for summarizing the variability seen in this Breast Cancer dataset with 9 measurements? Explain your reasoning for (a) the overall dataset, (b) the Benign subset and (c) the Malignant subset
 
